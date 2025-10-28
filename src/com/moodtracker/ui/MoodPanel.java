@@ -1,8 +1,8 @@
 package com.moodtracker.ui;
 
 import com.moodtracker.model.MoodService;
-import com.moodtracker.util.CsvExporter; // Import CsvExporter
-import com.moodtracker.ui.UIConstants; // *** FIX: Add missing import ***
+import com.moodtracker.util.CsvExporter; 
+import com.moodtracker.ui.UIConstants; 
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,10 +16,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * JPanel for logging a new mood entry.
- * Includes new color palette.
- */
 public class MoodPanel extends JPanel {
 
     private final MoodService moodService;
@@ -38,11 +34,10 @@ public class MoodPanel extends JPanel {
     private void initComponents() {
         setLayout(new BorderLayout(20, 20));
         setBorder(new EmptyBorder(20, 40, 40, 40));
-        setBackground(UIConstants.BACKGROUND_LIGHT); // Set light background
+        setBackground(UIConstants.BACKGROUND_LIGHT); 
 
-        // --- Main Content Panel (GridBagLayout) ---
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(UIConstants.PANEL_BACKGROUND); // Slightly darker panel
+        mainPanel.setBackground(UIConstants.PANEL_BACKGROUND); 
         mainPanel.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(UIConstants.BORDER_COLOR, 1, true),
                 new EmptyBorder(25, 25, 25, 25)
@@ -51,7 +46,6 @@ public class MoodPanel extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // --- Title ---
         JLabel titleLabel = new JLabel("How are you feeling today?");
         titleLabel.setFont(UIConstants.MAIN_FONT.deriveFont(Font.BOLD, 26f));
         titleLabel.setForeground(UIConstants.TEXT_PRIMARY);
@@ -61,7 +55,6 @@ public class MoodPanel extends JPanel {
         gbc.gridwidth = 3;
         mainPanel.add(titleLabel, gbc);
 
-        // --- Date Field ---
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         mainPanel.add(createLabel("Date (YYYY-MM-DD):"), gbc);
@@ -74,7 +67,6 @@ public class MoodPanel extends JPanel {
         dateField.setToolTipText("Enter the date in YYYY-MM-DD format");
         mainPanel.add(dateField, gbc);
 
-        // --- Mood Slider ---
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
@@ -99,7 +91,6 @@ public class MoodPanel extends JPanel {
 
         moodSlider.addChangeListener(e -> sliderValueLabel.setText(moodSlider.getValue() + " / 5"));
 
-        // --- Feelings Checkboxes ---
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.NORTHWEST;
@@ -109,10 +100,9 @@ public class MoodPanel extends JPanel {
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
-        createFeelingsPanel(); // This populates the feelingsPanel
+        createFeelingsPanel(); 
         mainPanel.add(feelingsPanel, gbc);
 
-        // --- Notes Area ---
         gbc.gridx = 0;
         gbc.gridy = 4;
         mainPanel.add(createLabel("Notes:"), gbc);
@@ -120,7 +110,7 @@ public class MoodPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
-        gbc.ipady = 80; // Make notes area taller
+        gbc.ipady = 80; 
         notesArea = new JTextArea("Add some details...");
         notesArea.setFont(UIConstants.MAIN_FONT.deriveFont(14f));
         notesArea.setForeground(Color.GRAY);
@@ -146,9 +136,8 @@ public class MoodPanel extends JPanel {
         JScrollPane notesScrollPane = new JScrollPane(notesArea);
         notesScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         mainPanel.add(notesScrollPane, gbc);
-        gbc.ipady = 0; // Reset
+        gbc.ipady = 0; 
 
-        // --- Save Button ---
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 3;
@@ -166,15 +155,12 @@ public class MoodPanel extends JPanel {
         saveButton.addActionListener(e -> saveMood());
         mainPanel.add(saveButton, gbc);
 
-        // --- Center Panel Alignment ---
-        // This wrapper panel ensures the mainPanel stays centered and doesn't stretch
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.setBackground(UIConstants.BACKGROUND_LIGHT);
         centerWrapper.add(mainPanel, new GridBagConstraints());
-        
+
         add(centerWrapper, BorderLayout.CENTER);
 
-        // --- Footer Panel for Export Button ---
         JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         footerPanel.setBackground(UIConstants.BACKGROUND_LIGHT);
         JButton exportButton = new JButton("Export All to CSV");
@@ -182,7 +168,7 @@ public class MoodPanel extends JPanel {
         exportButton.setToolTipText("Save all entries to a .csv file");
         exportButton.addActionListener(e -> exportData());
         footerPanel.add(exportButton);
-        
+
         add(footerPanel, BorderLayout.SOUTH);
     }
 
@@ -194,17 +180,17 @@ public class MoodPanel extends JPanel {
     }
 
     private void createFeelingsPanel() {
-        feelingsPanel = new JPanel(new GridLayout(0, 2, 8, 8)); // 0 rows, 2 columns
+        feelingsPanel = new JPanel(new GridLayout(0, 2, 8, 8)); 
         feelingsPanel.setBackground(UIConstants.PANEL_BACKGROUND);
-        
+
         feelingCheckboxes = new JCheckBox[UIConstants.FEELINGS.length];
         for (int i = 0; i < UIConstants.FEELINGS.length; i++) {
             String feeling = UIConstants.FEELINGS[i];
             Color color = UIConstants.FEELING_COLORS.get(feeling);
-            
+
             feelingCheckboxes[i] = new JCheckBox(feeling);
             feelingCheckboxes[i].setFont(UIConstants.MAIN_FONT.deriveFont(14f));
-            feelingCheckboxes[i].setForeground(color.darker()); // Use the feeling color for the text
+            feelingCheckboxes[i].setForeground(color.darker()); 
             feelingCheckboxes[i].setBackground(UIConstants.PANEL_BACKGROUND);
             feelingsPanel.add(feelingCheckboxes[i]);
         }
@@ -224,14 +210,13 @@ public class MoodPanel extends JPanel {
         String entryDate = dateField.getText();
         int rating = moodSlider.getValue();
         List<String> feelingsList = getSelectedFeelings();
-        String feelings = String.join(",", feelingsList); // Convert list to comma-separated string
+        String feelings = String.join(",", feelingsList); 
         String notes = notesArea.getText();
 
         if (notes.equals("Add some details...")) {
-            notes = ""; // Don't save placeholder text
+            notes = ""; 
         }
 
-        // Validate date format (simple regex)
         if (!entryDate.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
             JOptionPane.showMessageDialog(this,
                     "Invalid date format. Please use YYYY-MM-DD.",
@@ -247,19 +232,15 @@ public class MoodPanel extends JPanel {
                     "Mood entry saved successfully!",
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE);
-            
-            // Refresh analytics tab
+
             ((MainFrame) SwingUtilities.getWindowAncestor(this)).refreshAnalytics();
-            
-            // Reset fields
+
             notesArea.setText("Add some details...");
             notesArea.setForeground(Color.GRAY);
             moodSlider.setValue(3);
             for (JCheckBox checkBox : feelingCheckboxes) {
                 checkBox.setSelected(false);
             }
-            // Optionally, update date to current date again
-            // dateField.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
         } else {
             JOptionPane.showMessageDialog(this,
@@ -288,9 +269,9 @@ public class MoodPanel extends JPanel {
 
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File fileToSave = fileChooser.getSelectedFile();
-            // *** FIX: CsvExporter.exportToCsv now returns a String (error message) or null (success) ***
+
             String errorMessage = CsvExporter.exportToCsv(fileToSave.getAbsolutePath());
-            
+
             if (errorMessage == null) {
                 JOptionPane.showMessageDialog(this,
                         "Data exported successfully to:\n" + fileToSave.getAbsolutePath(),
@@ -305,4 +286,3 @@ public class MoodPanel extends JPanel {
         }
     }
 }
-

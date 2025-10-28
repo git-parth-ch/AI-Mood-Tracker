@@ -12,8 +12,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 750);
         setLocationRelativeTo(null);
-        
-        // --- Color Update ---
+
         getContentPane().setBackground(UIConstants.BACKGROUND_COLOR);
 
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -21,7 +20,7 @@ public class MainFrame extends JFrame {
         tabbedPane.setBackground(UIConstants.PANEL_BACKGROUND_COLOR);
 
         MoodPanel moodPanel = new MoodPanel();
-        analyticsPanel = new AnalyticsPanel(); // Keep a reference
+        analyticsPanel = new AnalyticsPanel(); 
 
         tabbedPane.addTab("  Log Mood  ", moodPanel);
         tabbedPane.addTab(" Analytics  ", analyticsPanel);
@@ -29,13 +28,9 @@ public class MainFrame extends JFrame {
         add(tabbedPane, BorderLayout.CENTER);
     }
 
-    /**
-     * Called by MoodPanel to refresh the analytics tab after saving.
-     */
     public void refreshAnalytics() {
         if (analyticsPanel != null) {
             analyticsPanel.refreshData();
         }
     }
 }
-
