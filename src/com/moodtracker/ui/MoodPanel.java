@@ -1,8 +1,8 @@
 package com.moodtracker.ui;
 
 import com.moodtracker.model.MoodService;
-import com.moodtracker.util.CsvExporter; 
-import com.moodtracker.ui.UIConstants; 
+import com.moodtracker.util.CsvExporter;
+import com.moodtracker.ui.UIConstants;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -34,14 +34,13 @@ public class MoodPanel extends JPanel {
     private void initComponents() {
         setLayout(new BorderLayout(20, 20));
         setBorder(new EmptyBorder(20, 40, 40, 40));
-        setBackground(UIConstants.BACKGROUND_LIGHT); 
+        setBackground(UIConstants.BACKGROUND_LIGHT);
 
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(UIConstants.PANEL_BACKGROUND); 
+        mainPanel.setBackground(UIConstants.PANEL_BACKGROUND);
         mainPanel.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(UIConstants.BORDER_COLOR, 1, true),
-                new EmptyBorder(25, 25, 25, 25)
-        ));
+                new EmptyBorder(25, 25, 25, 25)));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -73,21 +72,25 @@ public class MoodPanel extends JPanel {
         mainPanel.add(createLabel("Overall Rating:"), gbc);
 
         gbc.gridx = 1;
-        gbc.gridwidth = 1;
+        gbc.gridwidth = 2;
+
+        JPanel sliderPanel = new JPanel(new BorderLayout(15, 0));
+        sliderPanel.setBackground(UIConstants.PANEL_BACKGROUND);
+
         moodSlider = new JSlider(1, 5, 3);
         moodSlider.setFont(UIConstants.MAIN_FONT.deriveFont(12f));
         moodSlider.setPaintTicks(true);
         moodSlider.setPaintLabels(true);
         moodSlider.setMajorTickSpacing(1);
         moodSlider.setBackground(UIConstants.PANEL_BACKGROUND);
-        mainPanel.add(moodSlider, gbc);
+        sliderPanel.add(moodSlider, BorderLayout.CENTER);
 
-        gbc.gridx = 2;
-        gbc.gridwidth = 1;
         sliderValueLabel = new JLabel("3 / 5");
         sliderValueLabel.setFont(UIConstants.MAIN_FONT.deriveFont(Font.BOLD, 16f));
         sliderValueLabel.setForeground(UIConstants.TEXT_PRIMARY);
-        mainPanel.add(sliderValueLabel, gbc);
+        sliderPanel.add(sliderValueLabel, BorderLayout.EAST);
+
+        mainPanel.add(sliderPanel, gbc);
 
         moodSlider.addChangeListener(e -> sliderValueLabel.setText(moodSlider.getValue() + " / 5"));
 
@@ -100,7 +103,7 @@ public class MoodPanel extends JPanel {
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
-        createFeelingsPanel(); 
+        createFeelingsPanel();
         mainPanel.add(feelingsPanel, gbc);
 
         gbc.gridx = 0;
@@ -110,7 +113,7 @@ public class MoodPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
-        gbc.ipady = 80; 
+        gbc.ipady = 80;
         notesArea = new JTextArea("Add some details...");
         notesArea.setFont(UIConstants.MAIN_FONT.deriveFont(14f));
         notesArea.setForeground(Color.GRAY);
@@ -125,6 +128,7 @@ public class MoodPanel extends JPanel {
                     notesArea.setForeground(UIConstants.TEXT_PRIMARY);
                 }
             }
+
             @Override
             public void focusLost(FocusEvent e) {
                 if (notesArea.getText().isEmpty()) {
@@ -136,7 +140,7 @@ public class MoodPanel extends JPanel {
         JScrollPane notesScrollPane = new JScrollPane(notesArea);
         notesScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         mainPanel.add(notesScrollPane, gbc);
-        gbc.ipady = 0; 
+        gbc.ipady = 0;
 
         gbc.gridx = 0;
         gbc.gridy = 5;
@@ -180,7 +184,7 @@ public class MoodPanel extends JPanel {
     }
 
     private void createFeelingsPanel() {
-        feelingsPanel = new JPanel(new GridLayout(0, 2, 8, 8)); 
+        feelingsPanel = new JPanel(new GridLayout(0, 2, 8, 8));
         feelingsPanel.setBackground(UIConstants.PANEL_BACKGROUND);
 
         feelingCheckboxes = new JCheckBox[UIConstants.FEELINGS.length];
@@ -190,7 +194,7 @@ public class MoodPanel extends JPanel {
 
             feelingCheckboxes[i] = new JCheckBox(feeling);
             feelingCheckboxes[i].setFont(UIConstants.MAIN_FONT.deriveFont(14f));
-            feelingCheckboxes[i].setForeground(color.darker()); 
+            feelingCheckboxes[i].setForeground(color.darker());
             feelingCheckboxes[i].setBackground(UIConstants.PANEL_BACKGROUND);
             feelingsPanel.add(feelingCheckboxes[i]);
         }
@@ -210,11 +214,11 @@ public class MoodPanel extends JPanel {
         String entryDate = dateField.getText();
         int rating = moodSlider.getValue();
         List<String> feelingsList = getSelectedFeelings();
-        String feelings = String.join(",", feelingsList); 
+        String feelings = String.join(",", feelingsList);
         String notes = notesArea.getText();
 
         if (notes.equals("Add some details...")) {
-            notes = ""; 
+            notes = "";
         }
 
         if (!entryDate.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
@@ -253,12 +257,14 @@ public class MoodPanel extends JPanel {
     private void exportData() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Save CSV Export");
-        fileChooser.setSelectedFile(new File("mood_export_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".csv"));
+        fileChooser.setSelectedFile(
+                new File("mood_export_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".csv"));
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             @Override
             public boolean accept(File f) {
                 return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv");
             }
+
             @Override
             public String getDescription() {
                 return "CSV Files (*.csv)";
